@@ -221,6 +221,6 @@ src/
 
 ### Design
 
-A interface usa um **design system claro editorial** (referências: Attio light, Notion), com tokens para cor, tipografia (Inter única), espaçamento e raio. Princípios: hierarquia por peso de tipo e espaçamento, cor semântica (status e ações), densidade informativa, ícones SVG consistentes, e "quiet chrome" (bordas e sombras discretas). O kit `NEXUS_CRM_Kit_Referencia/` serviu como ponto de partida funcional; a direção visual final foi revisada após pesquisa de nichos similares.
+A interface usa um **design system escuro atmosférico**: fundo com transição de cor (aurora sutil em ciano/violeta), superfícies profundas, glow controlado em estados e ações, tipografia Space Grotesk + Inter e ícones SVG consistentes. Cor é semântica (status e ações); hierarquia por peso de tipo, espaçamento e densidade informativa. O kit `NEXUS_CRM_Kit_Referencia/` serviu como base de direção visual, com refinamentos de contraste e componentes.
 
-Acessibilidade verificada: todos os pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion`. As regras da prova, a API e os cálculos continuam inalterados.
+Acessibilidade verificada: pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion`. As regras da prova, a API e os cálculos continuam inalterados.

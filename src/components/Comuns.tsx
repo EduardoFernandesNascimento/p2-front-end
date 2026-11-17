@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { Selo as TipoSelo, StatusPedido } from '../types';
+import { Icone } from './Icones';
 
 export function RotaProtegida() {
   const { token } = useAuth();
@@ -35,16 +36,15 @@ export function Erro({ mensagem, onTentar }: { mensagem: string; onTentar?: () =
 }
 
 interface EmptyStateProps {
-  icone?: string;
   titulo: string;
   texto?: string;
   acao?: { rotulo: string; onClick: () => void };
 }
 
-export function EmptyState({ icone = '◎', titulo, texto, acao }: EmptyStateProps) {
+export function EmptyState({ titulo, texto, acao }: EmptyStateProps) {
   return (
     <div className="vazio">
-      <span className="vazio-icone" aria-hidden="true">{icone}</span>
+      <span className="vazio-icone" aria-hidden="true"><Icone nome="inbox" tamanho={32} /></span>
       <strong>{titulo}</strong>
       {texto && <p>{texto}</p>}
       {acao && (

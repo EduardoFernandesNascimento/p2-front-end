@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { nomeUsuario, useAuth } from '../context/AuthContext';
 import { iniciais } from '../utils/calculos';
+import { Icone } from './Icones';
 
 const TITULOS: Record<string, string> = {
   '/': 'Painel',
@@ -51,31 +52,26 @@ export function Layout() {
     <div className="app-shell">
       <aside className={`sidebar ${aberto ? 'is-open' : ''}`} id="sidebar" aria-label="Menu lateral">
         <span className="brand">
-          <span className="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span className="brand-name">NEXUS<small>CRM / DIGITAL GRID</small></span>
+          <span className="brand-mark" aria-hidden="true"><i></i></span>
+          <span className="brand-name">NEXUS CRM</span>
         </span>
 
-        <div className="side-label">WORKSPACE</div>
         <nav className="nav-list" aria-label="Menu principal">
           <NavLink to="/" end className={classeNav} onClick={fechar}>
-            <span className="nav-icon" aria-hidden="true">⌂</span><span>Painel</span>
+            <span className="nav-icon"><Icone nome="painel" tamanho={17} /></span><span>Painel</span>
           </NavLink>
           <NavLink to="/clientes" end className={classeNav} onClick={fechar}>
-            <span className="nav-icon" aria-hidden="true">◎</span><span>Clientes</span>
+            <span className="nav-icon"><Icone nome="clientes" tamanho={17} /></span><span>Clientes</span>
           </NavLink>
           <NavLink to="/pedidos" className={classeNav} onClick={fechar}>
-            <span className="nav-icon" aria-hidden="true">▤</span><span>Pedidos</span>
+            <span className="nav-icon"><Icone nome="pedidos" tamanho={17} /></span><span>Pedidos</span>
           </NavLink>
           <NavLink to="/clientes/novo" className={classeNav} onClick={fechar}>
-            <span className="nav-icon" aria-hidden="true">＋</span><span>Novo cliente</span>
+            <span className="nav-icon"><Icone nome="mais" tamanho={17} /></span><span>Novo cliente</span>
           </NavLink>
         </nav>
 
         <div className="sidebar-bottom">
-          <div className="system-state">
-            <span className="live-dot" aria-hidden="true" />
-            <span>AMBIENTE CONECTADO</span>
-          </div>
           <div className="user-mini">
             <div className="avatar" aria-hidden="true">{iniciaisUsuario}</div>
             <div>
@@ -84,7 +80,7 @@ export function Layout() {
             </div>
           </div>
           <button type="button" className="nav-item logout" onClick={fazerSair}>
-            <span className="nav-icon" aria-hidden="true">↗</span><span>Sair</span>
+            <span className="nav-icon"><Icone nome="sair" tamanho={17} /></span><span>Sair</span>
           </button>
         </div>
       </aside>
@@ -101,10 +97,10 @@ export function Layout() {
             aria-controls="sidebar"
             onClick={() => setAberto((v) => !v)}
           >
-            ☰
+            <Icone nome="menu" tamanho={20} />
           </button>
           <div className="breadcrumb">
-            <span>WORKSPACE</span>
+            <span>NEXUS</span>
             <b>/</b>
             <strong>{tituloDaRota(location.pathname)}</strong>
           </div>

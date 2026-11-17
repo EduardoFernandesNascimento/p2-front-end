@@ -221,4 +221,6 @@ src/
 
 ### Design
 
-A interface segue a direção visual de `NEXUS_CRM_Kit_Referencia/`: tema escuro futurista (fundo `#050b14`, ciano `#00d9ff`, tipografia Space Grotesk + Inter), sidebar com drawer no mobile, skeleton loading, toast de sucesso, modal de confirmação, `:focus-visible` e `prefers-reduced-motion`. As regras da prova, a API e os cálculos não mudaram.
+A interface usa um **design system claro editorial** (referências: Attio light, Notion), com tokens para cor, tipografia (Inter única), espaçamento e raio. Princípios: hierarquia por peso de tipo e espaçamento, cor semântica (status e ações), densidade informativa, ícones SVG consistentes, e "quiet chrome" (bordas e sombras discretas). O kit `NEXUS_CRM_Kit_Referencia/` serviu como ponto de partida funcional; a direção visual final foi revisada após pesquisa de nichos similares.
+
+Acessibilidade verificada: todos os pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion`. As regras da prova, a API e os cálculos continuam inalterados.

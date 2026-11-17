@@ -43,7 +43,7 @@ test('fluxo completo clique a clique', async ({ page, request }) => {
   await page.locator('input[autocomplete="current-password"]').fill('emilyspass');
   await page.getByRole('button', { name: 'Entrar' }).click();
   await page.waitForURL(/\/$/);
-  await expect(page.getByRole('heading', { name: /Painel/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Visão geral/ })).toBeVisible();
   await expect(page.getByText('Emily Santos').first()).toBeVisible();
 
   /* ---------- 2. PAINEL ---------- */

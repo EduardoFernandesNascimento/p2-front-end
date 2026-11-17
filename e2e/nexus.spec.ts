@@ -130,7 +130,7 @@ test('fluxo completo clique a clique', async ({ page, request }) => {
   await page.getByLabel('Título').fill('Contato inicial');
   await page.getByLabel('Texto').fill('Cliente entrou em contato por telefone.');
   await page.getByRole('button', { name: 'Salvar' }).first().click();
-  await expect(page.getByText('Atendimento registrado.')).toBeVisible();
+  await expect(page.getByText('Atendimento registrado.', { exact: true })).toBeVisible();
   await expect(page.getByText('Contato inicial')).toBeVisible();
 
   // filtro por canal

@@ -193,6 +193,16 @@ npm run build
 npm run preview
 ```
 
+### Teste E2E (validação clique a clique)
+
+O fluxo completo (login → painel → clientes → pedidos → histórico → 404 → sair) é validado com Playwright:
+
+```bash
+npx playwright test
+```
+
+O teste exige a API na porta 3333. Sem o servidor-crm, o diretório `e2e/stub-api/` (fora do versionamento) contém um stub temporário com as mesmas rotas e regras, usado apenas para validação local.
+
 ### Estrutura
 
 ```

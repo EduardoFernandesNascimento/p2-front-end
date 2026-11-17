@@ -11,3 +11,9 @@ dist/
 
 # Pasta local dos agentes (PROTOCOLO §7) — nunca vai para o remoto
 /.claude/
+
+e2e/stub-api/
+
+playwright-report/
+test-results/
+blob-report/

@@ -133,7 +133,13 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
                         <button type="button" className="btn btn-pequeno" disabled={ocupado} onClick={() => setEditandoId(p.id)}>Editar itens</button>
                       )}
                       {proximosStatus(p.status).map((s) => (
-                        <button key={s} type="button" className={`btn btn-pequeno ${s === 'cancelado' ? 'btn-perigo' : ''}`} disabled={ocupado} onClick={() => setModal({ tipo: 'cancelar', pedido: p })}>
+                        <button
+                          key={s}
+                          type="button"
+                          className={`btn btn-pequeno ${s === 'cancelado' ? 'btn-perigo' : ''}`}
+                          disabled={ocupado}
+                          onClick={() => (s === 'cancelado' ? setModal({ tipo: 'cancelar', pedido: p }) : mudarStatus(p, s))}
+                        >
                           {ROTULO_STATUS[s]}
                         </button>
                       ))}

@@ -1,4 +1,11 @@
 
+node_modules/
+dist/
+*.zip
+*.tsbuildinfo
+.env
+.env.local
+
 # Pasta local dos agentes (PROTOCOLO §7) — nunca vai para o remoto
 /.opencode/
 

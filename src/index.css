@@ -1,0 +1,142 @@
+:root {
+  --fundo: #f4f5f7;
+  --cartao: #ffffff;
+  --texto: #1d2330;
+  --suave: #5d6577;
+  --borda: #dde1e8;
+  --primaria: #2453c7;
+  --primaria-escura: #1a3f9a;
+  --perigo: #c0322b;
+  --ok: #1f7a43;
+  --aviso: #9a6200;
+  --raio: 10px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--fundo);
+  line-height: 1.45;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; background: var(--fundo); overflow-x: hidden; }
+h1 { font-size: clamp(1.35rem, 1.1rem + 1vw, 1.8rem); margin: 0 0 0.75rem; }
+h2 { font-size: 1.15rem; margin: 0 0 0.75rem; }
+h3 { font-size: 1rem; margin: 0 0 0.5rem; }
+a { color: var(--primaria); }
+img { max-width: 100%; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.quebra { overflow-wrap: anywhere; min-width: 0; }
+.texto-suave { color: var(--suave); font-size: 0.9rem; }
+
+/* ---------- topo e menu (mobile first) ---------- */
+.topo { background: #172036; color: #fff; position: sticky; top: 0; z-index: 10; }
+.topo-linha { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; }
+.marca { color: #fff; font-weight: 700; font-size: 1.15rem; text-decoration: none; }
+.btn-menu { background: transparent; color: #fff; border: 1px solid #ffffff55; border-radius: 8px; padding: 0.45rem 0.9rem; min-height: 44px; font: inherit; cursor: pointer; }
+.menu { display: none; flex-direction: column; gap: 0.25rem; padding: 0 1rem 0.9rem; }
+.menu-aberto { display: flex; }
+.menu a { color: #dfe6f7; text-decoration: none; padding: 0.6rem 0.5rem; border-radius: 6px; }
+.menu a.active { background: #ffffff1f; color: #fff; font-weight: 600; }
+.menu-usuario { color: #b9c3da; padding: 0.5rem; font-size: 0.9rem; }
+.btn-sair { align-self: flex-start; }
+
+@media (min-width: 860px) {
+  .topo { display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; }
+  .topo-linha { padding: 0.75rem 0; }
+  .btn-menu { display: none; }
+  .menu { display: flex; flex-direction: row; align-items: center; padding: 0; gap: 0.25rem; }
+  .menu-usuario { margin-left: 0.75rem; }
+}
+
+.conteudo { width: 100%; max-width: 1100px; margin: 0 auto; padding: 1rem; }
+
+/* ---------- blocos ---------- */
+.cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 1rem; min-width: 0; }
+.cabecalho { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; }
+.cabecalho h1, .cabecalho h2 { margin: 0; }
+.secao { margin-top: 1rem; }
+.grade-numeros { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); margin-bottom: 1rem; }
+.grade-duas { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.numero { display: flex; flex-direction: column; gap: 0.2rem; }
+.numero span { color: var(--suave); font-size: 0.9rem; }
+.numero strong { font-size: 1.5rem; }
+.numero small { color: var(--suave); }
+
+.tabela { width: 100%; border-collapse: collapse; }
+.tabela th, .tabela td { text-align: left; padding: 0.5rem 0.35rem; border-bottom: 1px solid var(--borda); }
+.ranking { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+.ranking li { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ---------- botões ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; min-height: 44px; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--borda); background: #fff; color: var(--texto); font: inherit; text-decoration: none; cursor: pointer; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-primario { background: var(--primaria); border-color: var(--primaria); color: #fff; }
+.btn-perigo { color: var(--perigo); border-color: #e8b4b1; }
+.btn-pequeno { min-height: 36px; padding: 0.3rem 0.75rem; font-size: 0.9rem; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(:disabled):hover { filter: brightness(0.96); }
+  .btn-primario:not(:disabled):hover { background: var(--primaria-escura); }
+  .cartao-clicavel:hover { border-color: var(--primaria); }
+}
+.acoes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+
+/* ---------- formulários ---------- */
+label { display: flex; flex-direction: column; gap: 0.3rem; font-weight: 500; font-size: 0.95rem; min-width: 0; }
+input, select, textarea { font: inherit; padding: 0.6rem 0.7rem; border: 1px solid var(--borda); border-radius: 8px; background: #fff; width: 100%; min-height: 44px; }
+input[aria-invalid='true'] { border-color: var(--perigo); }
+.formulario { display: grid; gap: 0.85rem; max-width: 560px; }
+.erro-campo { color: var(--perigo); font-size: 0.85rem; font-weight: 400; }
+.dica { margin: 0; color: var(--suave); font-size: 0.9rem; }
+.busca { margin-bottom: 1rem; }
+
+.alerta { margin: 0 0 0.75rem; padding: 0.65rem 0.8rem; border-radius: 8px; background: #fff6e0; color: var(--aviso); border: 1px solid #f0d9a2; }
+.alerta-erro { background: #fdecea; color: var(--perigo); border-color: #f2c1bd; }
+
+/* ---------- estados ---------- */
+.estado { padding: 1.25rem; text-align: center; color: var(--suave); }
+.estado-erro { color: var(--perigo); background: #fdecea; border-radius: var(--raio); display: grid; gap: 0.5rem; justify-items: center; }
+.estado-erro p { margin: 0; }
+.nao-encontrado { text-align: center; display: grid; gap: 0.75rem; justify-items: center; }
+
+/* ---------- listas ---------- */
+.lista-cartoes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.cartao-clicavel { width: 100%; text-align: left; display: grid; gap: 0.25rem; cursor: pointer; font: inherit; color: inherit; }
+.linha-titulo { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.paginacao { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.paginacao span { color: var(--suave); font-size: 0.9rem; }
+
+.selo, .status, .canal { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.selo-vip { background: #fff1c7; color: #7a5200; }
+.selo-regular { background: #e3ecff; color: var(--primaria-escura); }
+.selo-sem { background: #eceef2; color: var(--suave); }
+.status-aberto { background: #e3ecff; color: var(--primaria-escura); }
+.status-pago { background: #dcf3e5; color: var(--ok); }
+.status-cancelado { background: #fdecea; color: var(--perigo); }
+.canal { background: #eceef2; color: var(--texto); }
+
+.dados-cliente dl { margin: 0; display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.dados-cliente dt { color: var(--suave); font-size: 0.85rem; }
+.dados-cliente dd { margin: 0; font-weight: 500; }
+
+.lista-pedidos, .lista-atendimentos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.pedido, .atendimento { border: 1px solid var(--borda); border-radius: 8px; padding: 0.8rem; min-width: 0; }
+.atendimento p { margin: 0.4rem 0 0; }
+.itens { margin: 0.5rem 0; padding-left: 1.1rem; }
+.total-pedido { font-size: 1rem; }
+.bloco-form { border: 1px dashed var(--borda); border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem; }
+
+.itens-editor { display: grid; gap: 0.6rem; }
+.item-linha { border: 1px solid var(--borda); border-radius: 8px; padding: 0.6rem; margin: 0; display: grid; gap: 0.5rem; min-width: 0; }
+@media (min-width: 640px) {
+  .item-linha { grid-template-columns: 2fr 1fr 0.7fr auto; align-items: end; }
+}
+
+.filtros { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
+.filtros-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+.contador { color: var(--suave); font-weight: 600; margin: 0 0 0.5rem; }
+
+/* ---------- login ---------- */
+.login-pagina { min-height: 100dvh; display: grid; place-items: center; padding: 1rem; }
+.login-form { width: 100%; max-width: 380px; display: grid; gap: 0.9rem; }
+.login-form h1 { margin: 0; }
+.sub { margin: 0; color: var(--suave); }

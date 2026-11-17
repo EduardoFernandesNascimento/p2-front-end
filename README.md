@@ -1,7 +1,7 @@
 # P2 · CRM de clientes
 
 Prova prática P2 (7,0) · Laboratório de Programação Front End · Engenharia de Software · 2026.2
-**Alunos:** Eduardo Fernandes e Carlos Wagner · **Professora:** Laís Cristine Bordallo Pinheiro
+**Alunos:** Eduardo Fernandes do Nascimento e Carlos Wagner de Souza Venceslao · **Professora:** Laís Cristine Bordallo Pinheiro
 **Data:** 17/11/2026 · Em dupla (autorizado pela professora) · 18:50 às 22:10 · Entrega 22:10 no AVA
 
 **Repositório:** https://github.com/EduardoFernandesNascimento/p2-front-end
@@ -171,7 +171,7 @@ npm install
 npm start        # http://localhost:3333
 ```
 
-**2. Configurar o app.** Na raiz deste projeto (ao lado do `package.json`), copie `.env.example` para `.env` (ou crie os arquivo):
+**2. Configurar o app.** Na raiz deste projeto (ao lado do `package.json`), copie `.env.example` para `.env` (ou crie o arquivo):
 
 ```
 VITE_API_URL=http://localhost:3333
@@ -198,6 +198,7 @@ npm run preview
 O fluxo completo (login → painel → clientes → pedidos → histórico → 404 → sair) é validado com Playwright:
 
 ```bash
+npx playwright install chromium   # só na primeira vez: baixa o navegador do teste
 npx playwright test
 ```
 
@@ -215,12 +216,15 @@ src/
   components/Toast       toast de sucesso/erro (aria-live), usado após salvar/excluir
   components/ModalConfirm diálogo de confirmação estilizado (substitui window.confirm)
   components/Comuns      rota protegida, estados carregando (skeleton)/erro/vazio, selo e status
+  components/Icones      ícones SVG do menu e das ações
   components/            pedidos e histórico do cliente (PedidosCliente, HistoricoCliente, ItensEditor)
   pages/                 Login, Painel, Clientes, Detalhe, Formulário, Todos os pedidos, Não encontrada
+e2e/                     teste Playwright do fluxo completo e script de capturas de tela
+NEXUS_CRM_Kit_Referencia/ kit de referência visual usado como base do design
 ```
 
 ### Design
 
 A interface usa um **design system escuro com direção Tron (Legacy)**: ciano elétrico como cor de ação e âmbar "Clu" apenas como acento decorativo — nunca em status de erro/aviso, que mantêm sua semântica, nem na tela de login, que é só ciano. O fundo combina aurora e um **Grid em perspectiva todo ciano** com linha de horizonte; superfícies profundas recebem marcas de registro de HUD nos cantos, e números/labels de dados usam fonte monoespaçada, reforçando o caráter de terminal. Há varredura de luz sutil no hover de cards e do botão principal; a tela de login é limpa, sem círculos decorativos. Tipografia Space Grotesk + Inter + mono do sistema e ícones SVG consistentes. O kit `NEXUS_CRM_Kit_Referencia/` serviu como base de direção visual, com refinamentos de contraste e componentes.
 
-Acessibilidade verificada: pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion` — que desliga varreduras e transições. Sem dependência de fontes externas: o mono usa fallback do sistema. Ausência de rolagem lateral confirmada em 1280 px e 375 px. As regras da prova, a API e os cálculos continuam inalterados.
+Acessibilidade verificada: pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion` — que desliga varreduras e transições. Space Grotesk e Inter vêm do Google Fonts; sem internet, o app usa as fontes do sistema e continua funcionando. O mono usa a fonte do sistema. Ausência de rolagem lateral confirmada em 1280 px e 375 px. As regras da prova, a API e os cálculos continuam inalterados.

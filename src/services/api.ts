@@ -21,6 +21,9 @@ export const apagarToken = (): void => localStorage.removeItem(CHAVE_TOKEN);
 
 async function request<T>(caminho: string, opcoes: { method?: string; body?: unknown; auth?: boolean } = {}): Promise<T> {
   const { method = 'GET', body, auth = true } = opcoes;
+  if (!BASE_URL) {
+    throw new ApiError(0, 'Endereço da API não configurado: crie o .env com VITE_API_URL e reinicie o npm run dev.');
+  }
   const headers: Record<string, string> = {};
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   const token = lerToken();

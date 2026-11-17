@@ -161,4 +161,46 @@ A nota da P2 = Trabalho P2 · Delivery (3,0) + esta prova (7,0) + até 1,0 extra
 
 ## Como rodar
 
-> Esta seção será completada quando o app estiver pronto (`npm install`, `.env`, `npm run dev`, `npm run build`).
+Requisitos: Node.js 18+ e npm.
+
+**1. Ligar a API** (num terminal, deixe aberto):
+
+```bash
+cd servidor-crm
+npm install
+npm start        # http://localhost:3333
+```
+
+**2. Configurar o app.** Na raiz deste projeto (ao lado do `package.json`), crie o arquivo `.env`:
+
+```
+VITE_API_URL=http://localhost:3333
+```
+
+**3. Rodar o app** (em outro terminal, na raiz deste projeto):
+
+```bash
+npm install
+npm run dev      # abre em http://localhost:5173
+```
+
+Entre com `emilys` / `emilyspass`. Depois de criar ou editar o `.env`, reinicie o `npm run dev`.
+
+**Build de produção:**
+
+```bash
+npm run build
+npm run preview
+```
+
+### Estrutura
+
+```
+src/
+  services/api.ts        serviço de API (fetch): token Bearer, status HTTP e mensagens de erro
+  context/AuthContext    sessão (token + usuário de /auth/me) compartilhada por Context
+  utils/calculos.ts      funções puras: total do pedido, total comprado, selo, Top 3, ticket médio, regras de status
+  utils/validacao.ts     validação do cliente e dos itens do pedido antes de enviar
+  components/            menu, rota protegida, estados (carregando/erro/vazio), pedidos e histórico do cliente
+  pages/                 Login, Painel, Clientes, Detalhe, Formulário, Todos os pedidos, Não encontrada
+```

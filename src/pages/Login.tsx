@@ -41,6 +41,7 @@ export function Login() {
   return (
     <div className="login-pagina">
       <form className="cartao login-form" onSubmit={enviar} noValidate>
+        <p className="login-kicker" aria-hidden="true">NEXUS // ACESSO AUTORIZADO</p>
         <div className="login-marca">
           <span className="brand-mark" aria-hidden="true"><i></i></span>
           <span className="brand-name">NEXUS CRM</span>

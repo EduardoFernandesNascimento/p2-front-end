@@ -60,7 +60,7 @@ export function Painel() {
           <div className="metric-foot">Cadastros ativos</div>
         </div>
         <div className="metric-card">
-          <div className="metric-top"><span className="metric-icon violet"><Icone nome="pedidos" tamanho={16} /></span></div>
+          <div className="metric-top"><span className="metric-icon amber"><Icone nome="pedidos" tamanho={16} /></span></div>
           <div className="metric-label">Total vendido</div>
           <div className="metric-value">{moeda(totalVendido(pedidos))}</div>
           <div className="metric-foot">Sem pedidos cancelados</div>

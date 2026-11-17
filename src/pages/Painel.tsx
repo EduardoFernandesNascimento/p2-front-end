@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Carregando, Erro, EmptyState, StatusTag } from '../components/Comuns';
+import { Icone } from '../components/Icones';
 import { clientesApi, mensagemErro, pedidosApi } from '../services/api';
 import type { Cliente, Pedido } from '../types';
 import { iniciais, moeda, resumoPorStatus, ticketMedio, topClientes, totalVendido } from '../utils/calculos';
@@ -53,16 +54,19 @@ export function Painel() {
 
       <div className="metrics-grid" aria-label="Indicadores">
         <div className="metric-card">
+          <div className="metric-top"><span className="metric-icon"><Icone nome="clientes" tamanho={16} /></span></div>
           <div className="metric-label">Total de clientes</div>
           <div className="metric-value">{totalClientes}</div>
           <div className="metric-foot">Cadastros ativos</div>
         </div>
         <div className="metric-card">
+          <div className="metric-top"><span className="metric-icon violet"><Icone nome="pedidos" tamanho={16} /></span></div>
           <div className="metric-label">Total vendido</div>
           <div className="metric-value">{moeda(totalVendido(pedidos))}</div>
           <div className="metric-foot">Sem pedidos cancelados</div>
         </div>
         <div className="metric-card">
+          <div className="metric-top"><span className="metric-icon"><Icone nome="moeda" tamanho={16} /></span></div>
           <div className="metric-label">Ticket médio</div>
           <div className="metric-value">{moeda(ticketMedio(pedidos))}</div>
           <div className="metric-foot">Sem pedidos cancelados</div>

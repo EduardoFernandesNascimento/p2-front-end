@@ -2,7 +2,7 @@
 
 Prova prática P2 (7,0) · Laboratório de Programação Front End · Engenharia de Software · 2026.2
 **Alunos:** Eduardo Fernandes e Carlos Wagner · **Professora:** Laís Cristine Bordallo Pinheiro
-**Data:** 17/11/2026 · Individual · 18:50 às 22:10 · Entrega 22:10 no AVA
+**Data:** 17/11/2026 · Em dupla (autorizado pela professora) · 18:50 às 22:10 · Entrega 22:10 no AVA
 
 **Repositório:** https://github.com/EduardoFernandesNascimento/p2-front-end
 

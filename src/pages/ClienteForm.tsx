@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Carregando, Erro } from '../components/Comuns';
+import { useToast } from '../components/Toast';
 import { ApiError, clientesApi, mensagemErro } from '../services/api';
 import type { ClienteEntrada } from '../types';
 import { validarCliente, type ErrosCliente } from '../utils/validacao';
@@ -11,6 +12,7 @@ export function ClienteForm() {
   const { id } = useParams();
   const editando = Boolean(id);
   const navigate = useNavigate();
+  const { avisar } = useToast();
 
   const [dados, setDados] = useState<ClienteEntrada>(VAZIO);
   const [erros, setErros] = useState<ErrosCliente>({});
@@ -57,9 +59,11 @@ export function ClienteForm() {
     try {
       if (id) {
         await clientesApi.editar(id, corpo);
+        avisar('Cliente atualizado.');
         navigate(`/clientes/${id}`);
       } else {
         await clientesApi.criar(corpo);
+        avisar('Cliente criado.');
         navigate('/clientes');
       }
     } catch (err) {

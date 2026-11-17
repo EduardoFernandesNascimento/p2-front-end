@@ -86,6 +86,14 @@ export const filtrarPorCanal = (lista: Atendimento[], canal: string): Atendiment
 export const moeda = (valor: number): string =>
   valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+export const iniciais = (nome: string): string => {
+  const partes = nome.trim().split(/\s+/).filter(Boolean);
+  if (partes.length === 0) return '?';
+  const primeira = partes[0].charAt(0);
+  const ultima = partes.length > 1 ? partes[partes.length - 1].charAt(0) : '';
+  return (primeira + ultima).toUpperCase();
+};
+
 export const formatarData = (iso: string): string => {
   if (!iso) return '—';
   // "2026-11-03" é só data: formata direto para não voltar um dia por causa do fuso

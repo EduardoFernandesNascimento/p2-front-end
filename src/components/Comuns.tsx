@@ -9,8 +9,20 @@ export function RotaProtegida() {
   return <Outlet />;
 }
 
-export function Carregando({ texto = 'Carregando...' }: { texto?: string }) {
-  return <p className="estado" role="status">{texto}</p>;
+type VarianteSkeleton = 'cartao' | 'linha' | 'valor';
+
+export function Skeleton({ variante = 'linha' }: { variante?: VarianteSkeleton }) {
+  return <div className={`skeleton skeleton-${variante}`} role="status" aria-label="Carregando" />;
+}
+
+export function Carregando({ variante = 'cartao' }: { variante?: VarianteSkeleton }) {
+  return (
+    <div className="skeleton-bloco" role="status" aria-label="Carregando">
+      <Skeleton variante={variante} />
+      <Skeleton variante={variante} />
+      <Skeleton variante={variante} />
+    </div>
+  );
 }
 
 export function Erro({ mensagem, onTentar }: { mensagem: string; onTentar?: () => void }) {
@@ -22,8 +34,28 @@ export function Erro({ mensagem, onTentar }: { mensagem: string; onTentar?: () =
   );
 }
 
+interface EmptyStateProps {
+  icone?: string;
+  titulo: string;
+  texto?: string;
+  acao?: { rotulo: string; onClick: () => void };
+}
+
+export function EmptyState({ icone = '◎', titulo, texto, acao }: EmptyStateProps) {
+  return (
+    <div className="vazio">
+      <span className="vazio-icone" aria-hidden="true">{icone}</span>
+      <strong>{titulo}</strong>
+      {texto && <p>{texto}</p>}
+      {acao && (
+        <button type="button" className="btn btn-pequeno" onClick={acao.onClick}>{acao.rotulo}</button>
+      )}
+    </div>
+  );
+}
+
 export function Vazio({ texto }: { texto: string }) {
-  return <p className="estado estado-vazio">{texto}</p>;
+  return <EmptyState titulo={texto} />;
 }
 
 export function Selo({ selo }: { selo: TipoSelo }) {
@@ -32,5 +64,10 @@ export function Selo({ selo }: { selo: TipoSelo }) {
 }
 
 export function StatusTag({ status }: { status: StatusPedido }) {
-  return <span className={`status status-${status}`}>{status}</span>;
+  return (
+    <span className={`status status-${status}`}>
+      <i aria-hidden="true" />
+      {status}
+    </span>
+  );
 }

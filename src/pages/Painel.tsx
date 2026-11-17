@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Carregando, Erro, StatusTag, Vazio } from '../components/Comuns';
+import { Carregando, Erro, EmptyState, StatusTag } from '../components/Comuns';
 import { clientesApi, mensagemErro, pedidosApi } from '../services/api';
 import type { Cliente, Pedido } from '../types';
-import { moeda, resumoPorStatus, ticketMedio, topClientes, totalVendido } from '../utils/calculos';
+import { iniciais, moeda, resumoPorStatus, ticketMedio, topClientes, totalVendido } from '../utils/calculos';
+
+const RANKS = ['one', 'two', 'three'] as const;
 
 export function Painel() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -29,50 +31,99 @@ export function Painel() {
 
   useEffect(() => { carregar(); }, [carregar]);
 
-  if (loading) return <Carregando />;
+  if (loading) return <Carregando variante="valor" />;
   if (erro) return <Erro mensagem={erro} onTentar={carregar} />;
 
   const top3 = topClientes(clientes, pedidos);
+  const maiorTotal = top3.length > 0 ? top3[0].total : 0;
+  const resumo = resumoPorStatus(pedidos);
+  const maxQuantidade = Math.max(1, ...resumo.map((r) => r.quantidade));
 
   return (
     <section>
-      <div className="cabecalho">
-        <h1>Painel</h1>
-        <Link to="/clientes/novo" className="btn btn-primario">+ Novo cliente</Link>
+      <div className="welcome-row">
+        <div>
+          <div className="eyebrow">
+            <span className="live-dot" aria-hidden="true" />
+            <span>CENTRAL DE COMANDO</span>
+            <span className="eyebrow-line" aria-hidden="true" />
+          </div>
+          <h1>Painel <span>geral</span></h1>
+          <p>Visão geral da operação. Tudo conectado em um só lugar.</p>
+        </div>
+        <Link to="/clientes/novo" className="primary-button">
+          <span aria-hidden="true">＋</span> Novo cliente
+        </Link>
       </div>
 
-      <div className="grade-numeros">
-        <div className="cartao numero"><span>Total de clientes</span><strong>{totalClientes}</strong></div>
-        <div className="cartao numero"><span>Total vendido</span><strong>{moeda(totalVendido(pedidos))}</strong><small>sem cancelados</small></div>
-        <div className="cartao numero"><span>Ticket médio</span><strong>{moeda(ticketMedio(pedidos))}</strong><small>sem cancelados</small></div>
+      <div className="metrics-grid" aria-label="Indicadores">
+        <article className="metric-card">
+          <div className="metric-top"><span className="metric-icon cyan" aria-hidden="true">◎</span></div>
+          <div className="metric-value">{totalClientes}</div>
+          <div className="metric-label">Total de clientes</div>
+          <div className="metric-foot"><span>BASE DE CLIENTES</span><span>Todos os cadastros</span></div>
+        </article>
+        <article className="metric-card">
+          <div className="metric-top"><span className="metric-icon blue" aria-hidden="true">＄</span></div>
+          <div className="metric-value">{moeda(totalVendido(pedidos))}</div>
+          <div className="metric-label">Total vendido</div>
+          <div className="metric-foot"><span>VENDAS VÁLIDAS</span><span>Sem cancelados</span></div>
+        </article>
+        <article className="metric-card">
+          <div className="metric-top"><span className="metric-icon violet" aria-hidden="true">▥</span></div>
+          <div className="metric-value">{moeda(ticketMedio(pedidos))}</div>
+          <div className="metric-label">Ticket médio</div>
+          <div className="metric-foot"><span>VALOR POR PEDIDO</span><span>Sem cancelados</span></div>
+        </article>
       </div>
 
-      <div className="grade-duas">
-        <div className="cartao">
-          <h2>Pedidos por status</h2>
-          <table className="tabela">
-            <thead><tr><th>Status</th><th>Qtd.</th><th>Valor</th></tr></thead>
-            <tbody>
-              {resumoPorStatus(pedidos).map((r) => (
-                <tr key={r.status}><td><StatusTag status={r.status} /></td><td>{r.quantidade}</td><td>{moeda(r.valor)}</td></tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="content-grid">
+        <div className="panel">
+          <div className="panel-heading">
+            <div>
+              <div className="section-kicker">STATUS</div>
+              <h2>Pedidos por status</h2>
+            </div>
+          </div>
+          {resumo.map((r) => (
+            <div className="status-linha" key={r.status}>
+              <div className="status-linha-topo">
+                <StatusTag status={r.status} />
+                <span className="texto-suave">{r.quantidade} pedido{r.quantidade === 1 ? '' : 's'}</span>
+              </div>
+              <div className="progress" aria-hidden="true">
+                <i style={{ width: `${(r.quantidade / maxQuantidade) * 100}%` }} />
+              </div>
+              <div className="metric-foot"><span>VALOR</span><span className="status-valor">{moeda(r.valor)}</span></div>
+            </div>
+          ))}
         </div>
 
-        <div className="cartao">
-          <h2>Top 3 clientes</h2>
+        <div className="panel">
+          <div className="panel-heading">
+            <div>
+              <div className="section-kicker">RELACIONAMENTO</div>
+              <h2>Top clientes</h2>
+            </div>
+            <span className="trophy" aria-hidden="true">♜</span>
+          </div>
           {top3.length === 0 ? (
-            <Vazio texto="Nenhuma compra registrada ainda." />
+            <EmptyState icone="♜" titulo="Nenhuma compra registrada ainda." texto="Quando houver pedidos válidos, o ranking aparecerá aqui." />
           ) : (
-            <ol className="ranking">
-              {top3.map((r) => (
-                <li key={String(r.cliente.id)}>
-                  <Link to={`/clientes/${r.cliente.id}`}>{r.cliente.nome}</Link>
-                  <strong>{moeda(r.total)}</strong>
-                </li>
-              ))}
-            </ol>
+            top3.map((r, i) => (
+              <Link to={`/clientes/${r.cliente.id}`} className="client-rank" key={String(r.cliente.id)}>
+                <span className={`rank rank-${RANKS[i]}`} aria-label={`Posição ${i + 1}`}>0{i + 1}</span>
+                <span className="avatar" aria-hidden="true">{iniciais(r.cliente.nome)}</span>
+                <span className="client-info">
+                  <strong className="quebra">{r.cliente.nome}</strong>
+                  <small>Total comprado</small>
+                  <span className="progress" aria-hidden="true">
+                    <i style={{ width: `${maiorTotal > 0 ? (r.total / maiorTotal) * 100 : 0}%` }} />
+                  </span>
+                </span>
+                <b>{moeda(r.total)}</b>
+              </Link>
+            ))
           )}
         </div>
       </div>

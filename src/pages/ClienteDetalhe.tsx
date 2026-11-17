@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Carregando, Erro, Selo } from '../components/Comuns';
 import { HistoricoCliente } from '../components/HistoricoCliente';
+import { ModalConfirm } from '../components/ModalConfirm';
 import { PedidosCliente } from '../components/PedidosCliente';
+import { useToast } from '../components/Toast';
 import { ApiError, atendimentosApi, clientesApi, mensagemErro, pedidosApi } from '../services/api';
 import type { Atendimento, Cliente, Pedido } from '../types';
 import { moeda, seloCliente, totalComprado } from '../utils/calculos';
@@ -10,6 +12,7 @@ import { moeda, seloCliente, totalComprado } from '../utils/calculos';
 export function ClienteDetalhe() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
+  const { avisar } = useToast();
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
@@ -18,6 +21,7 @@ export function ClienteDetalhe() {
   const [erro, setErro] = useState('');
   const [erroExcluir, setErroExcluir] = useState('');
   const [excluindo, setExcluindo] = useState(false);
+  const [confirmarExclusao, setConfirmarExclusao] = useState(false);
 
   const carregar = useCallback(async () => {
     setLoading(true);
@@ -57,16 +61,15 @@ export function ClienteDetalhe() {
 
   const excluir = async () => {
     if (!cliente) return;
-    const ok = window.confirm(
-      `Excluir o cliente “${cliente.nome}”?\n\nSerão apagados junto: ${pedidos.length} pedido(s) e ${atendimentos.length} atendimento(s).\nEsta ação não pode ser desfeita.`,
-    );
-    if (!ok) return;
     setExcluindo(true);
     setErroExcluir('');
     try {
       await clientesApi.excluir(cliente.id);
+      setConfirmarExclusao(false);
+      avisar('Cliente excluído.');
       navigate('/clientes', { replace: true });
     } catch (err) {
+      setConfirmarExclusao(false);
       setErroExcluir(mensagemErro(err, { recurso: 'Cliente' }));
     } finally {
       setExcluindo(false);
@@ -105,7 +108,7 @@ export function ClienteDetalhe() {
         {erroExcluir && <p className="alerta alerta-erro" role="alert">{erroExcluir}</p>}
         <div className="acoes">
           <Link to={`/clientes/${cliente.id}/editar`} className="btn">Editar</Link>
-          <button type="button" className="btn btn-perigo" onClick={excluir} disabled={excluindo}>
+          <button type="button" className="btn btn-perigo" onClick={() => setConfirmarExclusao(true)} disabled={excluindo}>
             {excluindo ? 'Excluindo...' : 'Excluir'}
           </button>
         </div>
@@ -113,6 +116,22 @@ export function ClienteDetalhe() {
 
       <PedidosCliente clienteId={cliente.id} pedidos={pedidos} onMudou={recarregarPedidos} />
       <HistoricoCliente clienteId={cliente.id} atendimentos={atendimentos} onMudou={recarregarAtendimentos} />
+
+      <ModalConfirm
+        aberto={confirmarExclusao}
+        titulo="Excluir cliente"
+        mensagem={
+          <>
+            Excluir o cliente <strong>“{cliente.nome}”</strong>?<br />
+            Serão apagados junto: <strong>{pedidos.length}</strong> pedido(s) e <strong>{atendimentos.length}</strong> atendimento(s).<br />
+            Esta ação não pode ser desfeita.
+          </>
+        }
+        confirmarRotulo="Excluir"
+        perigo
+        onConfirmar={excluir}
+        onCancelar={() => setConfirmarExclusao(false)}
+      />
     </section>
   );
 }

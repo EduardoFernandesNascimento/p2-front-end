@@ -171,7 +171,7 @@ npm install
 npm start        # http://localhost:3333
 ```
 
-**2. Configurar o app.** Na raiz deste projeto (ao lado do `package.json`), crie o arquivo `.env`:
+**2. Configurar o app.** Na raiz deste projeto (ao lado do `package.json`), copie `.env.example` para `.env` (ou crie os arquivo):
 
 ```
 VITE_API_URL=http://localhost:3333
@@ -201,6 +201,14 @@ src/
   context/AuthContext    sessão (token + usuário de /auth/me) compartilhada por Context
   utils/calculos.ts      funções puras: total do pedido, total comprado, selo, Top 3, ticket médio, regras de status
   utils/validacao.ts     validação do cliente e dos itens do pedido antes de enviar
-  components/            menu, rota protegida, estados (carregando/erro/vazio), pedidos e histórico do cliente
+  components/Layout      sidebar NEXUS (drawer no mobile), topbar e breadcrumb
+  components/Toast       toast de sucesso/erro (aria-live), usado após salvar/excluir
+  components/ModalConfirm diálogo de confirmação estilizado (substitui window.confirm)
+  components/Comuns      rota protegida, estados carregando (skeleton)/erro/vazio, selo e status
+  components/            pedidos e histórico do cliente (PedidosCliente, HistoricoCliente, ItensEditor)
   pages/                 Login, Painel, Clientes, Detalhe, Formulário, Todos os pedidos, Não encontrada
 ```
+
+### Design
+
+A interface segue a direção visual de `NEXUS_CRM_Kit_Referencia/`: tema escuro futurista (fundo `#050b14`, ciano `#00d9ff`, tipografia Space Grotesk + Inter), sidebar com drawer no mobile, skeleton loading, toast de sucesso, modal de confirmação, `:focus-visible` e `prefers-reduced-motion`. As regras da prova, a API e os cálculos não mudaram.

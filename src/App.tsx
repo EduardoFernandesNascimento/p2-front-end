@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RotaProtegida } from './components/Comuns';
 import { Layout } from './components/Layout';
+import { ToastProvider } from './components/Toast';
 import { AuthProvider } from './context/AuthContext';
 import { ClienteDetalhe } from './pages/ClienteDetalhe';
 import { ClienteForm } from './pages/ClienteForm';
@@ -14,20 +15,22 @@ export function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<RotaProtegida />}>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Painel />} />
-              <Route path="/clientes" element={<Clientes />} />
-              <Route path="/clientes/novo" element={<ClienteForm />} />
-              <Route path="/clientes/:id" element={<ClienteDetalhe />} />
-              <Route path="/clientes/:id/editar" element={<ClienteForm />} />
-              <Route path="/pedidos" element={<Pedidos />} />
-              <Route path="*" element={<NaoEncontrada />} />
+        <ToastProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<RotaProtegida />}>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Painel />} />
+                <Route path="/clientes" element={<Clientes />} />
+                <Route path="/clientes/novo" element={<ClienteForm />} />
+                <Route path="/clientes/:id" element={<ClienteDetalhe />} />
+                <Route path="/clientes/:id/editar" element={<ClienteForm />} />
+                <Route path="/pedidos" element={<Pedidos />} />
+                <Route path="*" element={<NaoEncontrada />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );

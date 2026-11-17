@@ -5,6 +5,8 @@ import { dataDe, formatarData, moeda, ordenarRecentes, podeEditarItens, proximos
 import { paraRascunho } from '../utils/validacao';
 import { StatusTag, Vazio } from './Comuns';
 import { ItensEditor } from './ItensEditor';
+import { ModalConfirm } from './ModalConfirm';
+import { useToast } from './Toast';
 
 interface Props {
   clienteId: Id;
@@ -12,18 +14,26 @@ interface Props {
   onMudou: () => Promise<void>;
 }
 
+interface ModalEstado {
+  tipo: 'cancelar' | 'excluir';
+  pedido: Pedido;
+}
+
 const ROTULO_STATUS: Record<StatusPedido, string> = { aberto: 'Reabrir', pago: 'Marcar como pago', cancelado: 'Cancelar pedido' };
 
 export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
+  const { avisar } = useToast();
   const [criando, setCriando] = useState(false);
   const [editandoId, setEditandoId] = useState<Id | null>(null);
   const [ocupadoId, setOcupadoId] = useState<Id | null>(null);
   const [erro, setErro] = useState('');
+  const [modal, setModal] = useState<ModalEstado | null>(null);
 
   const criar = async (itens: ItemPedido[]) => {
     try {
       await pedidosApi.criar(clienteId, itens);
       setCriando(false);
+      avisar('Pedido criado.');
       await onMudou();
     } catch (err) {
       throw new Error(mensagemErro(err, { recurso: 'Cliente' }));
@@ -34,6 +44,7 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
     try {
       await pedidosApi.editarItens(id, itens);
       setEditandoId(null);
+      avisar('Itens salvos.');
       await onMudou();
     } catch (err) {
       throw new Error(mensagemErro(err, { recurso: 'Pedido' }));
@@ -41,13 +52,15 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
   };
 
   const mudarStatus = async (pedido: Pedido, status: StatusPedido) => {
-    if (status === 'cancelado' && !window.confirm(`Cancelar o pedido #${pedido.id}? Pedido cancelado não muda mais.`)) return;
     setOcupadoId(pedido.id);
     setErro('');
     try {
       await pedidosApi.mudarStatus(pedido.id, status);
+      setModal(null);
+      avisar(`Pedido #${pedido.id} agora está ${status}.`);
       await onMudou();
     } catch (err) {
+      setModal(null);
       setErro(mensagemErro(err, { recurso: 'Pedido' }));
     } finally {
       setOcupadoId(null);
@@ -55,13 +68,15 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
   };
 
   const excluir = async (pedido: Pedido) => {
-    if (!window.confirm(`Excluir o pedido #${pedido.id} (${moeda(totalPedido(pedido))})? Esta ação não pode ser desfeita.`)) return;
     setOcupadoId(pedido.id);
     setErro('');
     try {
       await pedidosApi.excluir(pedido.id);
+      setModal(null);
+      avisar('Pedido excluído.');
       await onMudou();
     } catch (err) {
+      setModal(null);
       setErro(mensagemErro(err, { recurso: 'Pedido' }));
     } finally {
       setOcupadoId(null);
@@ -118,11 +133,11 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
                         <button type="button" className="btn btn-pequeno" disabled={ocupado} onClick={() => setEditandoId(p.id)}>Editar itens</button>
                       )}
                       {proximosStatus(p.status).map((s) => (
-                        <button key={s} type="button" className={`btn btn-pequeno ${s === 'cancelado' ? 'btn-perigo' : ''}`} disabled={ocupado} onClick={() => mudarStatus(p, s)}>
+                        <button key={s} type="button" className={`btn btn-pequeno ${s === 'cancelado' ? 'btn-perigo' : ''}`} disabled={ocupado} onClick={() => setModal({ tipo: 'cancelar', pedido: p })}>
                           {ROTULO_STATUS[s]}
                         </button>
                       ))}
-                      <button type="button" className="btn btn-pequeno btn-perigo" disabled={ocupado} onClick={() => excluir(p)}>Excluir</button>
+                      <button type="button" className="btn btn-pequeno btn-perigo" disabled={ocupado} onClick={() => setModal({ tipo: 'excluir', pedido: p })}>Excluir</button>
                     </div>
                     {p.status !== 'aberto' && <p className="texto-suave">Pedido {p.status}: itens só para leitura.</p>}
                   </>
@@ -132,6 +147,28 @@ export function PedidosCliente({ clienteId, pedidos, onMudou }: Props) {
           })}
         </ul>
       )}
+
+      <ModalConfirm
+        aberto={modal !== null}
+        titulo={modal?.tipo === 'excluir' ? 'Excluir pedido' : 'Cancelar pedido'}
+        mensagem={
+          modal?.tipo === 'excluir' ? (
+            <>
+              Excluir o pedido <strong>#{modal.pedido.id}</strong> ({moeda(totalPedido(modal.pedido))})?
+              <br />Esta ação não pode ser desfeita.
+            </>
+          ) : modal ? (
+            <>
+              Cancelar o pedido <strong>#{modal.pedido.id}</strong>?<br />
+              Um pedido cancelado não muda mais.
+            </>
+          ) : null
+        }
+        confirmarRotulo={modal?.tipo === 'excluir' ? 'Excluir' : 'Cancelar pedido'}
+        perigo
+        onConfirmar={() => (modal ? (modal.tipo === 'excluir' ? excluir(modal.pedido) : mudarStatus(modal.pedido, 'cancelado')) : undefined)}
+        onCancelar={() => setModal(null)}
+      />
     </div>
   );
 }

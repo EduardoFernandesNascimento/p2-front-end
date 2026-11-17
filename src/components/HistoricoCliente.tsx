@@ -3,6 +3,8 @@ import { atendimentosApi, mensagemErro } from '../services/api';
 import type { Atendimento, AtendimentoEntrada, Canal, Id } from '../types';
 import { dataDe, filtrarPorCanal, formatarData, ordenarRecentes } from '../utils/calculos';
 import { Vazio } from './Comuns';
+import { ModalConfirm } from './ModalConfirm';
+import { useToast } from './Toast';
 
 export const CANAIS: { valor: Canal; rotulo: string }[] = [
   { valor: 'telefone', rotulo: 'Telefone' },
@@ -20,11 +22,13 @@ interface Props {
 }
 
 export function HistoricoCliente({ clienteId, atendimentos, onMudou }: Props) {
+  const { avisar } = useToast();
   const [filtro, setFiltro] = useState('todos');
   const [formAberto, setFormAberto] = useState(false);
   const [editando, setEditando] = useState<Atendimento | null>(null);
   const [erro, setErro] = useState('');
   const [ocupadoId, setOcupadoId] = useState<Id | null>(null);
+  const [confirmarExclusao, setConfirmarExclusao] = useState<Atendimento | null>(null);
 
   const visiveis = ordenarRecentes(filtrarPorCanal(atendimentos, filtro));
 
@@ -33,17 +37,20 @@ export function HistoricoCliente({ clienteId, atendimentos, onMudou }: Props) {
     else await atendimentosApi.criar(clienteId, dados);
     setFormAberto(false);
     setEditando(null);
+    avisar(editando ? 'Atendimento atualizado.' : 'Atendimento registrado.');
     await onMudou();
   };
 
   const excluir = async (a: Atendimento) => {
-    if (!window.confirm(`Excluir o atendimento “${a.titulo}”?`)) return;
     setOcupadoId(a.id);
     setErro('');
     try {
       await atendimentosApi.excluir(a.id);
+      setConfirmarExclusao(null);
+      avisar('Atendimento excluído.');
       await onMudou();
     } catch (err) {
+      setConfirmarExclusao(null);
       setErro(mensagemErro(err, { recurso: 'Atendimento' }));
     } finally {
       setOcupadoId(null);
@@ -94,12 +101,27 @@ export function HistoricoCliente({ clienteId, atendimentos, onMudou }: Props) {
               <p className="quebra">{a.texto}</p>
               <div className="acoes">
                 <button type="button" className="btn btn-pequeno" disabled={ocupadoId !== null} onClick={() => { setEditando(a); setFormAberto(true); }}>Editar</button>
-                <button type="button" className="btn btn-pequeno btn-perigo" disabled={ocupadoId !== null} onClick={() => excluir(a)}>Excluir</button>
+                <button type="button" className="btn btn-pequeno btn-perigo" disabled={ocupadoId !== null} onClick={() => setConfirmarExclusao(a)}>Excluir</button>
               </div>
             </li>
           ))}
         </ul>
       )}
+
+      <ModalConfirm
+        aberto={confirmarExclusao !== null}
+        titulo="Excluir atendimento"
+        mensagem={
+          <>
+            Excluir o atendimento <strong>“{confirmarExclusao?.titulo}”</strong>?<br />
+            Esta ação não pode ser desfeita.
+          </>
+        }
+        confirmarRotulo="Excluir"
+        perigo
+        onConfirmar={() => (confirmarExclusao ? excluir(confirmarExclusao) : undefined)}
+        onCancelar={() => setConfirmarExclusao(null)}
+      />
     </div>
   );
 }

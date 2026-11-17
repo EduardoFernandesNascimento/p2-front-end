@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Carregando, Erro, Selo, Vazio } from '../components/Comuns';
 import { clientesApi, mensagemErro, pedidosApi } from '../services/api';
 import type { Cliente, Pedido } from '../types';
-import { seloCliente } from '../utils/calculos';
+import { iniciais, seloCliente } from '../utils/calculos';
 
 const POR_PAGINA = 5;
 
@@ -73,7 +73,10 @@ export function Clientes() {
             <li key={String(c.id)}>
               <button type="button" className="cartao cartao-clicavel" onClick={() => navigate(`/clientes/${c.id}`)}>
                 <span className="linha-titulo">
-                  <strong>{c.nome}</strong>
+                  <span className="linha-nome">
+                    <span className="avatar avatar-pequeno" aria-hidden="true">{iniciais(c.nome)}</span>
+                    <strong className="quebra">{c.nome}</strong>
+                  </span>
                   <Selo selo={seloCliente(pedidos, c.id)} />
                 </span>
                 <span className="texto-suave quebra">{c.email}</span>

@@ -193,17 +193,6 @@ npm run build
 npm run preview
 ```
 
-### Teste E2E (validação clique a clique)
-
-O fluxo completo (login → painel → clientes → pedidos → histórico → 404 → sair) é validado com Playwright:
-
-```bash
-npx playwright install chromium   # só na primeira vez: baixa o navegador do teste
-npx playwright test
-```
-
-O teste exige a API na porta 3333. Sem o servidor-crm, o diretório `e2e/stub-api/` (fora do versionamento) contém um stub temporário com as mesmas rotas e regras, usado apenas para validação local.
-
 ### Estrutura
 
 ```
@@ -219,12 +208,9 @@ src/
   components/Icones      ícones SVG do menu e das ações
   components/            pedidos e histórico do cliente (PedidosCliente, HistoricoCliente, ItensEditor)
   pages/                 Login, Painel, Clientes, Detalhe, Formulário, Todos os pedidos, Não encontrada
-e2e/                     teste Playwright do fluxo completo e script de capturas de tela
-NEXUS_CRM_Kit_Referencia/ kit de referência visual usado como base do design
 ```
 
 ### Design
 
-A interface usa um **design system escuro com direção Tron (Legacy)**: ciano elétrico como cor de ação e âmbar "Clu" apenas como acento decorativo — nunca em status de erro/aviso, que mantêm sua semântica, nem na tela de login, que é só ciano. O fundo combina aurora e um **Grid em perspectiva todo ciano** com linha de horizonte; superfícies profundas recebem marcas de registro de HUD nos cantos, e números/labels de dados usam fonte monoespaçada, reforçando o caráter de terminal. Há varredura de luz sutil no hover de cards e do botão principal; a tela de login é limpa, sem círculos decorativos. Tipografia Space Grotesk + Inter + mono do sistema e ícones SVG consistentes. O kit `NEXUS_CRM_Kit_Referencia/` serviu como base de direção visual, com refinamentos de contraste e componentes.
-
+A interface usa um **design system escuro com direção Tron (Legacy)**: ciano elétrico como cor de ação e âmbar "Clu" apenas como acento decorativo — nunca em status de erro/aviso, que mantêm sua semântica, nem na tela de login, que é só ciano. O fundo combina aurora e um **Grid em perspectiva todo ciano** com linha de horizonte; superfícies profundas recebem marcas de registro de HUD nos cantos, e números/labels de dados usam fonte monoespaçada, reforçando o caráter de terminal. Há varredura de luz sutil no hover de cards e do botão principal; a tela de login é limpa, sem círculos decorativos. Tipografia Space Grotesk + Inter + mono do sistema e ícones SVG consistentes.
 Acessibilidade verificada: pares de texto/token passam **WCAG AA** (contraste ≥ 4.5:1 medido), `:focus-visible`, alvos de toque ≥ 40px e `prefers-reduced-motion` — que desliga varreduras e transições. Space Grotesk e Inter vêm do Google Fonts; sem internet, o app usa as fontes do sistema e continua funcionando. O mono usa a fonte do sistema. Ausência de rolagem lateral confirmada em 1280 px e 375 px. As regras da prova, a API e os cálculos continuam inalterados.
